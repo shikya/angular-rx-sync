@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { NumberStreamService } from './numberstream.service';
 
 @Component({
   selector: 'app-root',
@@ -7,25 +7,36 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  array = [];
+  status: number;
+  isLoading = false;
 
-  constructor(private http: HttpClient) { }
+  constructor(private streamService: NumberStreamService) { }
 
   ngOnInit(): void {
-    this.getData();
+    this.isLoading = false;
+    this.fetchStream();
   }
 
-  public getData() {
-    const arr = [];
-    for (let i = 0 ; i < 100 ; i++) {
-      arr.push(i);
-    }
+  fetchStream() {
+    const context = this;
+    context.isLoading = true;
+    // Start streaming data
+    this.streamService.getStream(0).subscribe({
+      next(data: number) {
 
-    arr.map(i => {
-      this.http.get(`http://localhost:3000/sample/${i}`).subscribe(data => {
-        this.array.push(data);
-      });
+        // Chunk of data
+        context.status = data;
+      },
+      error(err) {
+
+        // Any error should be handled here
+        console.error(err);
+      },
+      complete() {
+
+        // Once there is nothing to finish
+        context.isLoading = false;
+      }
     });
-
   }
 }

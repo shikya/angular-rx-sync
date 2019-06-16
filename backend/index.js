@@ -8,8 +8,16 @@ app.get('/', (req, res) => res.send('Hello World!'));
 
 app.get('/sample/:id', (req, res, next) => {
     const id = req.params.id
-    setTimeout(()=>{
-        res.json({ id });
+
+    // Atleast 300ms of delay just to watch api fetching
+    setTimeout(()=> {
+        const next = parseInt(id) + 1;
+        const current = id;
+        if(id < 10) {
+            res.json({ next, current });
+        } else {
+            res.json({ current });
+        }
     }, 300);
 });
 

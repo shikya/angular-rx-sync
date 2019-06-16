@@ -1,5 +1,6 @@
 <div>
   <p>Application is running</p>
-  <p>Array length is {{ array.length }} </p>
-  <p><button (click)="getData()">Click</button></p>
+  <p>Current status is {{ status }} </p>
+  <p *ngIf="isLoading">Loading</p>
+  <p *ngIf="!isLoading">Finished</p>
 </div>
